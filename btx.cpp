@@ -22,7 +22,7 @@ int main()
         file.seekg(0, ios::end);
         length = file.tellg();
 
-        // read data as a block:
+        //setting pointer on begin file
         file.seekg(0, ios::beg);
 
         // opens an existing csv file or creates a new file.
@@ -47,14 +47,22 @@ int main()
 
             //writing data
             result
-                << a << ", "; //a
-            if (b == '\"')    //b
+                << a       //a
+                << ", ";   //
+            if (b == '\"') //b
             {
-                result << "\"" << b << b << "\", ";
+                result
+                    << "\""
+                    << b
+                    << b
+                    << "\", ";
             }
             else
             {
-                result << "\"" << b << "\", ";
+                result
+                    << "\""
+                    << b
+                    << "\", ";
             }
             result << ", "               //c
                    << dBigEndian << ", " //d
