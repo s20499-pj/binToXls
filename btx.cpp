@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <bitset>
+
 using namespace std;
 
 int main()
@@ -38,11 +38,13 @@ int main()
             file.read((char *)&d, sizeof d);
             file.read((char *)&e, sizeof e);
             file.read((char *)&f, sizeof f);
-            f >>= 10;
+            //f = 0x0001fc00;
+            //g = (f & 0x0001fc00) >> 10;     //jeżeli najniższy bit jest pierwszym
+            g = (f & 0x0003F800) >> 11; //jeżeli najniższy bit jest zerowym
 
             //d little endian to big endian:
             int dBigEndian = ((d & 0xff000000) >> 24) | ((d & 0x00ff0000)) >> 8 | ((d & 0x0000ff00) << 8) | ((d & 0x000000ff) << 24);
-            
+
             //writing data
             result
                 << a << ", "; //a
@@ -58,6 +60,7 @@ int main()
                    << dBigEndian << ", " //d
                    << e << ", "          //e
                    << ", "               //f
+                   << g << ", "          //g
                    << endl;
         }
 
