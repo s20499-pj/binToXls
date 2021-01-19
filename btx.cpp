@@ -40,7 +40,10 @@ int main()
             file.read((char *)&f, sizeof f);
             f >>= 10;
 
-            //witing data
+            //d little endian to big endian:
+            int dBigEndian = ((d & 0xff000000) >> 24) | ((d & 0x00ff0000)) >> 8 | ((d & 0x0000ff00) << 8) | ((d & 0x000000ff) << 24);
+            
+            //writing data
             result
                 << a << ", "; //a
             if (b == '\"')    //b
@@ -51,10 +54,10 @@ int main()
             {
                 result << "\"" << b << "\", ";
             }
-            result << ", "      //c
-                   << d << ", " //d
-                   << e << ", " //e
-                   << ", "      //f
+            result << ", "               //c
+                   << dBigEndian << ", " //d
+                   << e << ", "          //e
+                   << ", "               //f
                    << endl;
         }
 
