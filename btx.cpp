@@ -1,64 +1,69 @@
 #include <iostream>
 #include <fstream>
-
+#include <bitset>
 using namespace std;
 
 int main()
 {
-  cout << endl;
-  int length;
-  char *data;
+    int length; //liczba bajtów w pliku
+    short a;    //integer o długości 16 bitów
+    char b;     //znak (character)
+    char c;     //8 bitów wypełnienia (padding)
+    int d;      //integer 32 bitowy (big endian)
+    float e;    //32b liczba zmiennoprzecinkowa
+    long f;     //pole bitowe o długości 64 bitów
+    long g;     //7 bitowa liczba od bitu 11 zawarta w F
 
-  // open file:
-  ifstream file("sample_data.bin", ios::binary);
-  if (file.is_open())
-  {
-    file.seekg(0, ios::end);
-    length = file.tellg();
-    // allocate memory:
-    data = new char[length];
-    // read data as a block:
-    file.seekg(0, ios::beg);
-    file.read(data, length);
-    file.close();
-  }
-  else
-  {
-    cout << "Unable to open file";
-  }
-  /*
-  short a[length / 20]; //16 bit
-  char b[length / 20];           //8bit
-  bitset<8> c;                   //8bit
-  long d[length / 20];           //32
-  float e[length / 20];          //32
-  long long f:64;                //64
-  int g[length / 20];            //od 11 do 17 bitu f[]*/
+    // open file:
+    ifstream file("sample_data.bin", ios::binary);
+    if (file.is_open())
+    {
+        //reading length of file:
+        file.seekg(0, ios::end);
+        length = file.tellg();
 
-  struct Record
-  {
-    short a : 16;     //16
-    char b : 8;       //8
-    char c : 8;       //8
-    long d : 32;      //32
-    long e : 32;      //32
-    long long f : 64; //64
-                      //int g[length / 20]; //od 11 do 17 bitu f[]
-  };
+        // read data as a block:
+        file.seekg(0, ios::beg);
 
-  Record record[length / 20];
+        // opens an existing csv file or creates a new file.
+        fstream result;
+        result.open("export.csv", ios::out | ios::trunc);
 
-  for (int i = 0; i < length / 20; i++) //i is a 20 byte record
-  {
-    record[i] = {
-        data[i * 20],
-        data[i * 20 + 2],
-        data[i * 20 + 3],
-        data[i * 20 + 4],
-        data[i * 20 + 8],
-        data[i * 20 + 12]};
-  }
+        //reading data, i is a 20 byte record
+        for (int i = 0; i < length / 20; i++)
+        {
+            file.read((char *)&a, sizeof a);
+            file.read((char *)&b, sizeof b);
+            file.read((char *)&c, sizeof c);
+            file.read((char *)&d, sizeof d);
+            file.read((char *)&e, sizeof e);
+            file.read((char *)&f, sizeof f);
+            f >>= 10;
 
-  delete[] data;
-  return 0;
+            //witing data
+            result
+                << a << ", "; //a
+            if (b == '\"')    //b
+            {
+                result << "\"" << b << b << "\", ";
+            }
+            else
+            {
+                result << "\"" << b << "\", ";
+            }
+            result << ", "      //c
+                   << d << ", " //d
+                   << e << ", " //e
+                   << ", "      //f
+                   << endl;
+        }
+
+        file.close();
+        result.close();
+    }
+    else
+    {
+        cout << "Unable to open file";
+    }
+    return 0;
 }
