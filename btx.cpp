@@ -38,7 +38,7 @@ int main()
             file.read((char *)&d, sizeof d);
             file.read((char *)&e, sizeof e);
             file.read((char *)&f, sizeof f);
-            //f = 0x0001fc00;
+
             //g = (f & 0x0001fc00) >> 10;     //jeżeli najniższy bit jest pierwszym
             g = (f & 0x0003F800) >> 11; //jeżeli najniższy bit jest zerowym
 
